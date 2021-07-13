@@ -7,6 +7,7 @@ var fs = require("fs")
 
 var indexRouter = require("./routes/index")
 var usersRouter = require("./routes/users")
+const PORT = 3333
 
 var app = express()
 
@@ -39,16 +40,14 @@ app.use(function (err, req, res, next) {
   res.render("error")
 })
 
-// create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
-  flags: "a",
+app.get("/", function (req, res) {
+  fs.appendFile("message.txt", "data to append")
+  console.log(res.get("OK")) // 201 Warning
 })
 
-// setup the logger
-app.use(logger("combined", { stream: accessLogStream }))
-
-app.get("/", function (req, res) {
-  res.send("hello, world!")
+app.listen(PORT, function (err) {
+  if (err) console.log(err)
+  console.log("Server listening on PORT", PORT)
 })
 
 module.exports = app
